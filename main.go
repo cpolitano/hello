@@ -1,15 +1,7 @@
 package main
 
-import "net/http"
-import "fmt"
+import "github.com/cpolitano/hello/fundamentals"
 
 func main() {
-	fmt.Println("server running on port 8080")
-	http.HandleFunc("/", hello)
-	http.ListenAndServe(":8080", nil)
+	fundamentals.Variables()
 }
-
-func hello(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("hello world"))
-}
-
