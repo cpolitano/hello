@@ -9,6 +9,7 @@ var x int = 88;
 // accessible outside package because capital letter
 func Scope() {
 	// block level scope
+	fmt.Println("Inside Scope")
 	y := 17
 	fmt.Println(y)
 

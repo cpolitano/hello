@@ -6,4 +6,5 @@ import "github.com/cpolitano/hello/fundamentals"
 func main() {
 	fundamentals.Variables()
 	fundamentals.Scope()
+	fundamentals.Closure()
 }

@@ -3,6 +3,7 @@ package fundamentals
 import "fmt"
 
 func Variables() {
+	fmt.Println("Variables")
 	a := 10
 	b := "golang"
 	c := 4.17
