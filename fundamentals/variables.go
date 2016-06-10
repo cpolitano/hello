@@ -2,6 +2,9 @@ package fundamentals
 
 import "fmt"
 
+const k string = "Hello World"
+const j int = 50
+
 func Variables() {
 	fmt.Println("Variables")
 	a := 10
@@ -13,4 +16,5 @@ func Variables() {
 	fmt.Printf("%v \n", b)
 	fmt.Printf("%v \n", c)
 	fmt.Printf("%v \n", d)
+	fmt.Printf(k, j, "\n")
 }
