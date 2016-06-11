@@ -4,9 +4,9 @@ package main
 import "github.com/cpolitano/hello/fundamentals"
 
 func main() {
-	fundamentals.Variables()
-	fundamentals.Scope()
-	fundamentals.Closure()
+	// fundamentals.Variables()
+	// fundamentals.Scope()
+	// fundamentals.Closure()
 	fundamentals.Constants()
 	fundamentals.Memory()
 }
