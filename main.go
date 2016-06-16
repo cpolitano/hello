@@ -2,7 +2,8 @@ package main
 
 // import fully qualified package names
 // import "github.com/cpolitano/hello/fundamentals"
-import "github.com/cpolitano/hello/controlflow"
+// import "github.com/cpolitano/hello/controlflow"
+import "github.com/cpolitano/hello/exercises"
 
 func main() {
 	// fundamentals.Variables()
@@ -10,5 +11,10 @@ func main() {
 	// fundamentals.Closure()
 	// fundamentals.Constants()
 	// fundamentals.Memory()
-	controlflow.Loops()
+	// controlflow.Loops()
+	// controlflow.Switch()
+	// exercises.DivideTwoNumbers()
+	// exercises.PrintEvens()
+	// exercises.FizzBuzz()
+	exercises.Counter()
 }
