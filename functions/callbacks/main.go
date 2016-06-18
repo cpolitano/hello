@@ -3,7 +3,9 @@ package main
 import "fmt"
 
 func main() {
-	visit([]int{1, 2, 3, 5}, func(n int) {
+	// defer will stop function from executing until the very end of executing the parent function
+	// often used to close a file after it is opened and operated on
+	defer visit([]int{1, 2, 3, 5}, func(n int) {
 		fmt.Println(n)
 	})
 
@@ -12,6 +14,8 @@ func main() {
 	})
 
 	fmt.Println(xs)
+
+	fmt.Println(factorial(5))
 }
 
 //passing a func as an argument
@@ -34,3 +38,13 @@ func filter(numbers []int, callback func(int) bool) []int {
 // common in functional programming
 // but that's not really what Go is about
 // Go is about clarity and readability, not complexity
+
+
+// recursion example
+// big performance cost, usually better to use loops
+func factorial(x int) int {
+	if x == 0 {
+		return 1
+	}
+	return x * factorial(x - 1)
+}
