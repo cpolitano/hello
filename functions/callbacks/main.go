@@ -16,6 +16,10 @@ func main() {
 	fmt.Println(xs)
 
 	fmt.Println(factorial(5))
+
+	func() {
+		fmt.Println("anonymous self-executing function")
+	}()
 }
 
 //passing a func as an argument
