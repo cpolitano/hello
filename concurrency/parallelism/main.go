@@ -42,3 +42,6 @@ func avocado() {
 	wg.Done()
 }
 
+// race conditions
+// go run --race main.go
+
