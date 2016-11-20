@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 func main() {
+	// slices are a data structure to store a list of values of a certain type
 	// slices are a reference type
 	// represent an underlying array
 	x := []int{1, 1, 2, 3, 5, 8} 
@@ -39,9 +40,12 @@ func main() {
 	}
 
 	fmt.Println(greeting[1:2]) // prints el at index 1
-	fmt.Println(greeting[:2]) // prints els up to index 2
+	fmt.Println(greeting[:2]) // prints els up to but not including index 2
 	fmt.Println(greeting[3:]) // prints els at index 3 and after
 	fmt.Println(greeting[:]) // prints all els in slice
+	// the only way to DELETE from a slice
+	greeting = append(greeting[:3], greeting[4:]...) // removes "bonjour" at index 3
+	fmt.Println(greeting)
 
 	// Multidimensional slices
 	// creates a 2D slice, a slice of slice of string
@@ -60,4 +64,30 @@ func main() {
 	student2[3] = "98.00"
 	records = append(records, student2)
 	fmt.Println(records)
+
+	// Ways to Declare a Slice
+	// A slice is a reference type with an underlying data structure
+	// A slice has a pointer, length, capacity
+	// Shorthand
+	// gets underlying data structure, but cannot start referencing index
+	// must use append to add elements because slice has no length declared
+	studentA := []string{}
+	// Var 
+	// nothing is made, reference points to nothing
+	// initializes as zero value of slice, which is nil
+	// var ALWAYS initializes at zero value of the given type
+	var studentB []string 
+	// Make - the idiomatic way to declare a slice
+	// gives the slice length, so it can be added to immediately
+	studentC := make([]string, 8)
+	fmt.Println(studentA, studentB, studentC)
+
+	// Incrementing a slice
+	mySlice := make([]int, 1)
+	fmt.Println(mySlice[0])
+	mySlice[0] = 7 
+	fmt.Println(mySlice[0])
+	mySlice[0]++
+	fmt.Println(mySlice[0])
+
 }
