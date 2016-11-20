@@ -43,4 +43,21 @@ func main() {
 	fmt.Println(greeting[3:]) // prints els at index 3 and after
 	fmt.Println(greeting[:]) // prints all els in slice
 
+	// Multidimensional slices
+	// creates a 2D slice, a slice of slice of string
+	// can also make a slice of slice of int
+	records := make([][]string, 0)
+	student1 := make([]string, 4)
+	student1[0] = "Aloha"
+	student1[1] = "Jones"
+	student1[2] = "100.00"
+	student1[3] = "93.00"
+	records = append(records, student1)
+	student2 := make([]string, 4)
+	student2[0] = "Tulsi"
+	student2[1] = "Smith"
+	student2[2] = "86.00"
+	student2[3] = "98.00"
+	records = append(records, student2)
+	fmt.Println(records)
 }
