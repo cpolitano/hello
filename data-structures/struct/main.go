@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"encoding/json"
+	"os"
+	"strings"
 )
 
 // in Go we create types, not classes
@@ -36,7 +38,7 @@ func main() {
 		},
 		Genre: "jazz",
 	}
-	fmt.Println(p1.fullName())
+	// fmt.Println(p1.fullName())
 
 	// Marshalling
 	p2 := Person{"Aretha", "Franklin", 25}
@@ -48,7 +50,15 @@ func main() {
 	var p3 Person // initializes at zero value with empty strings
 	// creates a slice of bytes with a string literal with json
 	bs2 := []byte(`{"First": "Eartha", "Last": "Kitt", "Years": 28}`)
-	json.Unmarshal(bs2, &p3)
+	json.Unmarshal(bs2, &p3) // needs address/pointer
 	fmt.Println(p3)
 
+	// Encoding - Writer
+	json.NewEncoder(os.Stdout).Encode(p1)
+
+	// Decoding - Reader
+	var p4 Person
+	rdr := strings.NewReader(`{"First": "Amy", "Last": "Winehouse", "Years": 27}`)
+	json.NewDecoder(rdr).Decode(&p4) // needs address/pointer
+	fmt.Println(p4)
 }
