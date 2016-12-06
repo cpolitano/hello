@@ -1,40 +1,54 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"encoding/json"
+)
 
 // in Go we create types, not classes
 // a struct is a sequence of named elements called fields
 // fields have a name and a type
+// capitalized props are "exported", lowercase are "unexported"
+// tag tells struct to accept a value with a different key
 
 type Person struct {
-	first string
-	last string
-	age int
+	First string
+	Last string
+	Age int `json:"Years"` // tag
 }
 
 type Singer struct {
 	Person
-	genre string
+	Genre string
 }
 
 func (p Person) fullName() string {
-	return p.first + " " + p.last
+	return p.First + " " + p.Last
 }
 
 func main() {
 
 	p1 := Singer{
 		Person: Person{
-			first: "Nina",
-			last: "Simone",
-			age: 33,
+			First: "Nina",
+			Last: "Simone",
+			Age: 33,
 		},
-		genre: "jazz",
+		Genre: "jazz",
 	}
-	p2 := Person{"Aretha", "Franklin", 25}
-	p3 := Person{"Eartha", "Kitt", 28}
-
 	fmt.Println(p1.fullName())
-	fmt.Println(p2.fullName())
-	fmt.Println(p3.first, p3.last, p3.age)
+
+	// Marshalling
+	p2 := Person{"Aretha", "Franklin", 25}
+	// turn struct data into json
+	bs, _ := json.Marshal(p2)
+	fmt.Println(string(bs))
+
+	// Unmarshalling
+	var p3 Person // initializes at zero value with empty strings
+	// creates a slice of bytes with a string literal with json
+	bs2 := []byte(`{"First": "Eartha", "Last": "Kitt", "Years": 28}`)
+	json.Unmarshal(bs2, &p3)
+	fmt.Println(p3)
+
 }
