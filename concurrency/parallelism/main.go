@@ -14,10 +14,18 @@ func init() {
 	// will run concurrency with all CPUs
 	// now included by default in Go, so adding it is not necessary
 	// Go used to only run on 1 core by default unless this line was included
+	// this enables parallelism
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
 func main() {
+
+	// concurrency is the composition of independently executing processes
+	// concurrency is doing many things, but only one at a time
+	// parallelism is the simultaneous execution of possibly related processes
+	// parallelism is doing many things at the same time
+
+	// kale and avocado will run at the same time
 	wg.Add(2)
 	go kale()
 	go avocado()
@@ -43,5 +51,5 @@ func avocado() {
 }
 
 // race conditions
-// go run --race main.go
-
+// go run -race main.go
+// will print info on any race conditions to the terminal. nice!
