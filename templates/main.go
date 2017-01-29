@@ -8,7 +8,6 @@ import (
 )
 
 var tpl *template.Template // init tpl as pointer to template
-var ftpl *template.Template // init tpl as pointer to template
 
 type friend struct {
 	Name string
@@ -28,6 +27,8 @@ func init() {
 	// Must takes pointer to template and err and does
 	// error checking for us
 
+	// New creates pointer to template
+	// add Funcs before Parse
 	tpl = template.Must(template.New("").Funcs(fm).ParseGlob("views/*"))
 }
 
