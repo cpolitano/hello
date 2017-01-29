@@ -20,13 +20,19 @@ func main() {
 	// ParseFiles parses one or more named files
 	// tpl, err := template.ParseFiles("template.gohtml")
 
-	err := tpl.Execute(os.Stdout, nil) // pipes template to new file
-	if err != nil {
-		log.Fatalln(err)
-	} 
+	// err := tpl.Execute(os.Stdout, nil) // pipes template to new file
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// } 
 
 	// execute a specific template
 	// args are destination, template name, and data
+	err := tpl.ExecuteTemplate(os.Stdout, "template.gohtml", "Clare") 
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+
 	err = tpl.ExecuteTemplate(os.Stdout, "greet.gohtml", nil) 
 	if err != nil {
 		log.Fatalln(err)
