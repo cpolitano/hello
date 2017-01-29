@@ -8,6 +8,11 @@ import (
 
 var tpl *template.Template // init tpl as pointer to template
 
+type friend struct {
+	Name string
+	Greeting string
+}
+
 func init() {
 	// tpl is a container holding all the templates
 	tpl = template.Must(template.ParseGlob("views/*"))
@@ -23,22 +28,56 @@ func main() {
 	// err := tpl.Execute(os.Stdout, nil) // pipes template to new file
 	// if err != nil {
 	// 	log.Fatalln(err)
-	// } 
+	// }
 
 	// execute a specific template
 	// args are destination, template name, and data
-	err := tpl.ExecuteTemplate(os.Stdout, "template.gohtml", "Clare") 
+	// value of type STRING
+	err := tpl.ExecuteTemplate(os.Stdout, "template.gohtml", "Clare")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-
-	err = tpl.ExecuteTemplate(os.Stdout, "greet.gohtml", nil) 
+	// value of type MAP
+	greetings := map[string]string{
+		"English": "Hello",
+		"Hawaiian": "Aloha",
+		"Italian": "Ciao",
+		"Arabic": "Marhaba",
+	}
+	err = tpl.ExecuteTemplate(os.Stdout, "greet.gohtml", greetings)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	err = tpl.ExecuteTemplate(os.Stdout, "updates.gohtml", nil) 
+	// value of type SLICE
+	updates := []string{"news 1", "news 2", "news 3", "news 4"}
+	err = tpl.ExecuteTemplate(os.Stdout, "updates.gohtml", updates)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// value of type STRUCT
+	anisa := friend{
+		"Anisa",
+		"Hey",
+	}
+	err = tpl.ExecuteTemplate(os.Stdout, "struct.gohtml", anisa)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// value of type SLICE of STRUCTS
+	david := friend{
+		"David",
+		"Hi",
+	}
+	zoe := friend{
+		"Zoe",
+		"yo",
+	}
+	friends := []friend{anisa, david, zoe}
+	err = tpl.ExecuteTemplate(os.Stdout, "friends.gohtml", friends)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -50,5 +89,3 @@ func main() {
 	// defer nf.Close()
 
 }
-
-
