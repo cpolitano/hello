@@ -4,21 +4,39 @@ import (
 	"log"
 	"os"
 	"text/template"
+	"strings"
 )
 
 var tpl *template.Template // init tpl as pointer to template
+var ftpl *template.Template // init tpl as pointer to template
 
 type friend struct {
 	Name string
 	Greeting string
 }
 
+// FuncMap registers functions to pass into template
+var fm = template.FuncMap{
+	"uc": strings.ToUpper,
+	"ft": firstThree, 
+}
+
 func init() {
 	// tpl is a container holding all the templates
-	tpl = template.Must(template.ParseGlob("views/*"))
+	// tpl = template.Must(template.ParseGlob("views/*"))
 	// ParseGlob returns pointer to template and err
 	// Must takes pointer to template and err and does
 	// error checking for us
+
+	tpl = template.Must(template.New("").Funcs(fm).ParseGlob("views/*"))
+}
+
+func firstThree(s string) string {
+	s = strings.TrimSpace(s)
+	if len(s) >= 3 {
+		s = s[:3]
+	}
+	return s
 }
 
 func main() {
@@ -78,6 +96,12 @@ func main() {
 	}
 	friends := []friend{anisa, david, zoe}
 	err = tpl.ExecuteTemplate(os.Stdout, "friends.gohtml", friends)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// same but with functions
+	err = tpl.ExecuteTemplate(os.Stdout, "func.gohtml", friends)
 	if err != nil {
 		log.Fatalln(err)
 	}
