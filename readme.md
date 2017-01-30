@@ -1,1 +1,1 @@
-Working with Go fundamentals as I follow along [Todd McLeod's](https://github.com/GoesToEleven) awesome Udemy course.
+Working with Go fundamentals as I follow along [Todd McLeod's](https://github.com/GoesToEleven) awesome Udemy courses.
