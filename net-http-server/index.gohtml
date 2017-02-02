@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Aloha</title>
+</head>
+<body>
+	<h1>Aloha</h1>
+
+	{{if .}}
+	<div>
+		<h2>variable names and values</h2>
+		{{range $key, $value := .}}
+			<h3>{{$key}}</h3>
+			<ul>{{range $value}}<li>{{.}}</li>{{end}}</ul>
+		{{end}}
+	</div>
+	{{end}}
+
+	<form action="/" method="POST">
+		<input type="text" name="first_name" placeholder="first name">
+		<input type="submit" name="submit-btn" value="submit">
+	</form>
+</body>
+</html>
