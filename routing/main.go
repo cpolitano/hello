@@ -35,9 +35,9 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/", getIndex) 
-	http.HandleFunc("/dog/", getDog) // need trailing slash to handle /dog/dog_id 
-	http.HandleFunc("/me", getProfile)
+	http.Handle("/", http.HandlerFunc(getIndex)) 
+	http.Handle("/dog/", http.HandlerFunc(getDog)) // need trailing slash to handle /dog/dog_id 
+	http.Handle("/me", http.HandlerFunc(getProfile))
 
 	http.ListenAndServe(":8080", nil) // nil indicates use of default mux
 }
