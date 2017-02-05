@@ -2,9 +2,10 @@ package main
 
 import (
 	// "fmt"
-	"net/http"
 	"html/template"
 	"log"
+	"net/http"
+	"net/url"
 )
 
 // the handler interface type
@@ -12,7 +13,7 @@ import (
 // 	ServeHTTP(ResponseWriter, *Request)
 // }
 
-type thing int 
+type thing int
 
 func (m thing) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
@@ -20,7 +21,23 @@ func (m thing) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		log.Fatalln(err)
 	}
 
-	tpl.ExecuteTemplate(w, "index.gohtml", req.Form)
+	data := struct {
+		Method        string
+		URL           *url.URL
+		Submissions   map[string][]string
+		Header        http.Header
+		Host          string
+		ContentLength int64
+	}{
+		req.Method,
+		req.URL,
+		req.Form,
+		req.Header,
+		req.Host,
+		req.ContentLength,
+	}
+
+	tpl.ExecuteTemplate(w, "index.gohtml", data)
 }
 
 var tpl *template.Template
@@ -33,4 +50,3 @@ func main() {
 	var t thing
 	http.ListenAndServe(":8080", t)
 }
-

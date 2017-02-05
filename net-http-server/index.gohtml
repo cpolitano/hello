@@ -7,10 +7,15 @@
 <body>
 	<h1>Aloha</h1>
 
-	{{if .}}
+	{{if .Method}}<p>The request method: {{.Method}}</p>{{end}}
+    {{if .Host}}<p>The request host: {{.Host}}</p>{{end}}
+    {{if .ContentLength}}<p>The request ContentLength: {{.ContentLength}}</p>{{end}}
+
+
+	{{if .Submissions}}
 	<div>
 		<h2>variable names and values</h2>
-		{{range $key, $value := .}}
+		{{range $key, $value := .Submissions}}
 			<h3>{{$key}}</h3>
 			<ul>{{range $value}}<li>{{.}}</li>{{end}}</ul>
 		{{end}}
