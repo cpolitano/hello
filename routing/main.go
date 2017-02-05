@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"net/http"
+	"html/template"
 )
 
 // the handler interface type
@@ -10,17 +11,33 @@ import (
 // 	ServeHTTP(ResponseWriter, *Request)
 // }
 
-func getBooks(res http.ResponseWriter, req *http.Request) {
-	io.WriteString(res, "books")
+func getIndex(res http.ResponseWriter, req *http.Request) {
+	data := struct {
+		Title        string
+	}{
+		"Welcome",
+	}
+	tpl.ExecuteTemplate(res, "index.gohtml", data)
 }
 
-func getTapes(res http.ResponseWriter, req *http.Request) {
-	io.WriteString(res, "tapes")
+func getDog(res http.ResponseWriter, req *http.Request) {
+	io.WriteString(res, "dog")
+}
+
+func getProfile(res http.ResponseWriter, req *http.Request) {
+	io.WriteString(res, "me")
+}
+
+var tpl *template.Template
+
+func init() {
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
-	http.HandleFunc("/books/", getBooks) // need trailing slash to handle /books/book_id 
-	http.HandleFunc("/tapes", getTapes)
+	http.HandleFunc("/", getIndex) 
+	http.HandleFunc("/dog/", getDog) // need trailing slash to handle /dog/dog_id 
+	http.HandleFunc("/me", getProfile)
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", nil) // nil indicates use of default mux
 }
