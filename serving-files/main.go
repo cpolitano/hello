@@ -10,12 +10,8 @@ func hedgie(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, `<img src="/hedgie.jpg">`)
 }
 
-func getHedgie(w http.ResponseWriter, req *http.Request) {
-	http.ServeFile(w, req, "hedgie.jpg")
-}
-
 func main() {
-	http.HandleFunc("/", hedgie) 
-	http.HandleFunc("/hedgie.jpg", getHedgie)
+	http.Handle("/", http.FileServer(http.Dir("."))) // serve all files in .
+	http.HandleFunc("/hedgie", hedgie)
 	http.ListenAndServe(":8080", nil) 
 }
