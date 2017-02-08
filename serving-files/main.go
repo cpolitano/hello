@@ -17,6 +17,8 @@ func main() {
 	// http.HandleFunc("/hedgie", hedgie)
 
 	// if index.html is present, go will automatically serve it
+	// if no favicon, return NotFound for it to prevent multiple requests
 	// log.Fatal will catch any error returned from ListenAndServe
+	http.Handle("/favicon.ico", http.NotFoundHandler())
 	log.Fatal(http.ListenAndServe(":8080", http.FileServer(http.Dir(".")))) 
 }
