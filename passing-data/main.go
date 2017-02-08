@@ -8,7 +8,14 @@ import (
 
 func getQueryParams(w http.ResponseWriter, req *http.Request) {
 	value := req.FormValue("q")
-	io.WriteString(w, "Do my search "+value)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	io.WriteString(w, `
+		<form method="GET">
+		 <input type="text" name="q">
+		 <input type="submit">
+		</form>
+		<br>`+value)
+	// POST submits data in body, GET submits data in query params
 }
 
 func main() {
