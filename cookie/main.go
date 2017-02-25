@@ -2,9 +2,9 @@ package main
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"strconv"
-	"log"
 )
 
 func main() {
@@ -27,8 +27,13 @@ func index(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	count++
-	cookie.Value = strconv.Itoa(count)
+
+	if count > 3 {
+		cookie.MaxAge = -1
+	} else {
+		count++
+		cookie.Value = strconv.Itoa(count)
+	}
 
 	http.SetCookie(res, cookie)
 	io.WriteString(res, cookie.Value)
