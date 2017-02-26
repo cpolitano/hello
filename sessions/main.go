@@ -12,6 +12,7 @@ type user struct {
 	Password []byte
 	First    string
 	Last     string
+	Role string
 }
 
 var tpl *template.Template
@@ -72,6 +73,12 @@ func profile(res http.ResponseWriter, req *http.Request) {
 		http.Redirect(res, req, "/", http.StatusSeeOther)
 		return
 	}
+
+	if u.Role != "admin" {
+		http.Error(w, "You must be admin to view this page", http.StatusForbidden)
+		return
+	}
+
 	tpl.ExecuteTemplate(res, "profile.gohtml", u)
 }
 
@@ -91,6 +98,7 @@ func signup(res http.ResponseWriter, req *http.Request) {
 		p := req.FormValue("password")
 		f := req.FormValue("firstname")
 		l := req.FormValue("lastname")
+		r := req.FormValue("role")
 
 		// username taken?
 		if _, ok := dbUsers[username]; ok {
@@ -113,7 +121,7 @@ func signup(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, "Internal server error", http.StatusInternalServerError)
 			return
 		}
-		u = user{username, bs, f, l}
+		u = user{username, bs, f, l, r}
 		dbUsers[username] = u
 
 		// redirect
@@ -169,16 +177,14 @@ func logout(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	cookie, err := req.Cookie("session")
-	if err != nil {
-		delete(dbSessions, cookie.Value)
-		cookie := &http.Cookie{
-			Name:  "session",
-			Value: "",
-			MaxAge: -1
-		}
-		http.SetCookie(res, cookie)
+	cookie, _ := req.Cookie("session")
+	delete(dbSessions, cookie.Value)
+	cookie := &http.Cookie{
+		Name:  "session",
+		Value: "",
+		MaxAge: -1
 	}
+	http.SetCookie(res, cookie)
 	http.Redirect(res, req, "/", http.StatusSeeOther)
 	return
 }
