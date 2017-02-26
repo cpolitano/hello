@@ -54,6 +54,7 @@ func init() {
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/signup", signup)
+	http.HandleFunc("/login", login)
 	http.HandleFunc("/profile", profile)
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.ListenAndServe(":8080", nil)
@@ -120,4 +121,43 @@ func signup(res http.ResponseWriter, req *http.Request) {
 	}
 
 	tpl.ExecuteTemplate(res, "signup.gohtml", u)
+}
+
+func login(res http.ResponseWriter, req *http.Request) {
+	if alreadyLoggedIn(req) {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	// process form submission
+	if req.Method == http.MethodPost {
+		// get form values
+		username := req.FormValue("username")
+		p := req.FormValue("password")
+
+		// is there a username?
+		user, ok := dbUsers[username]
+		if !ok {
+			http.Error(res, "Username and/or password do not match", http.StatusForbidden)
+			return
+		}
+		// does the entered password match the stored password?
+		err := bcrypt.CompareHashAndPassword(user.Password, []byte(p))
+		if err != nil {
+			http.Error(res, "Username and/or password do not match", http.StatusForbidden)
+			return
+		}
+		// create session
+		sessionId := uuid.NewV4()
+		cookie := &http.Cookie{
+			Name:  "session",
+			Value: sessionId.String(),
+		}
+		http.SetCookie(res, cookie)
+		dbSessions[cookie.Value] = username
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	tpl.ExecuteTemplate(res, "login.gohtml", nil)
 }
