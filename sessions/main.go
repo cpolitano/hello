@@ -1,31 +1,123 @@
 package main
 
 import (
-	"fmt"
 	"github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
+	"html/template"
 	"net/http"
 )
 
+type user struct {
+	UserName string
+	Password []byte
+	First    string
+	Last     string
+}
+
+var tpl *template.Template
+var dbUsers = map[string]user{}      // user ID - user
+var dbSessions = map[string]string{} // session ID - user ID
+
+func getUser(res http.ResponseWriter, req *http.Request) user {
+	cookie, err := req.Cookie("session")
+	if err != nil {
+		sessionId := uuid.NewV4()
+		cookie = &http.Cookie{
+			Name:  "session",
+			Value: sessionId.String(),
+		}
+
+	}
+	http.SetCookie(res, cookie)
+
+	var u user
+	if un, ok := dbSessions[cookie.Value]; ok {
+		u = dbUsers[un]
+	}
+	return u
+}
+
+func alreadyLoggedIn(req *http.Request) bool {
+	cookie, err := req.Cookie("session")
+	if err != nil {
+		return false
+	}
+	un := dbSessions[cookie.Value]
+	_, ok := dbUsers[un]
+	return ok
+}
+
+func init() {
+	tpl = template.Must(template.ParseGlob("templates/*"))
+}
+
 func main() {
 	http.HandleFunc("/", index)
+	http.HandleFunc("/signup", signup)
+	http.HandleFunc("/profile", profile)
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.ListenAndServe(":8080", nil)
 }
 
 func index(res http.ResponseWriter, req *http.Request) {
-	cookie, err := req.Cookie("session")
+	u := getUser(res, req)
+	tpl.ExecuteTemplate(res, "index.gohtml", u)
+}
 
-	if err == http.ErrNoCookie {
-		id := uuid.NewV4()
-		cookie = &http.Cookie{
-			Name:  "session",
-			Value: id.String(),
-			// Secure: true // makes cookie available only on HTTPS
-			HttpOnly: true, // cannot access cookie with Javascript
-		}
+func profile(res http.ResponseWriter, req *http.Request) {
+	u := getUser(res, req)
+	if !alreadyLoggedIn(req) {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+	tpl.ExecuteTemplate(res, "profile.gohtml", u)
+}
 
-		http.SetCookie(res, cookie)
+func signup(res http.ResponseWriter, req *http.Request) {
+	if alreadyLoggedIn(req) {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
 	}
 
-	fmt.Println(cookie)
+	var u user
+
+	// process form submission
+	if req.Method == http.MethodPost {
+
+		// get form values
+		username := req.FormValue("username")
+		p := req.FormValue("password")
+		f := req.FormValue("firstname")
+		l := req.FormValue("lastname")
+
+		// username taken?
+		if _, ok := dbUsers[username]; ok {
+			http.Error(res, "Username already taken", http.StatusForbidden)
+			return
+		}
+
+		// create session
+		sessionId := uuid.NewV4()
+		cookie := &http.Cookie{
+			Name:  "session",
+			Value: sessionId.String(),
+		}
+		http.SetCookie(res, cookie)
+		dbSessions[cookie.Value] = username
+
+		// store user in dbUsers
+		bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
+		if err != nil {
+			http.Error(res, "Internal server error", http.StatusInternalServerError)
+			return
+		}
+		u = user{username, bs, f, l}
+		dbUsers[username] = u
+
+		// redirect
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	tpl.ExecuteTemplate(res, "signup.gohtml", u)
 }
