@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"net/http"
+	"time"
 )
 
 type user struct {
@@ -15,9 +16,16 @@ type user struct {
 	Role string
 }
 
+type session struct {
+	username string
+	lastActive time.Time
+}
+
 var tpl *template.Template
 var dbUsers = map[string]user{}      // user ID - user
-var dbSessions = map[string]string{} // session ID - user ID
+var dbSessions = map[string]session{} // session ID - user ID
+var dbSessionsCleaned time.Time
+const sessionLength int = 30
 
 func getUser(res http.ResponseWriter, req *http.Request) user {
 	cookie, err := req.Cookie("session")
@@ -29,6 +37,7 @@ func getUser(res http.ResponseWriter, req *http.Request) user {
 		}
 
 	}
+	cookie.MaxAge = sessionLength
 	http.SetCookie(res, cookie)
 
 	var u user
@@ -38,18 +47,26 @@ func getUser(res http.ResponseWriter, req *http.Request) user {
 	return u
 }
 
-func alreadyLoggedIn(req *http.Request) bool {
+func alreadyLoggedIn(res http.ResponseWriter, req *http.Request) bool {
 	cookie, err := req.Cookie("session")
 	if err != nil {
 		return false
 	}
-	un := dbSessions[cookie.Value]
-	_, ok := dbUsers[un]
+	session, ok := dbSessions[cookie.Value]
+	if ok {
+		session.lastActive = time.Now()
+		dbSessions[cookie.Value] = session
+	}
+	_, ok = dbUsers[session.username]
+	// refresh session
+	cookie.MaxAge = sessionLength
+	http.SetCookie(res, cookie)
 	return ok
 }
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
+	dbSessionsCleaned = time.Now()
 }
 
 func main() {
@@ -112,8 +129,9 @@ func signup(res http.ResponseWriter, req *http.Request) {
 			Name:  "session",
 			Value: sessionId.String(),
 		}
+		cookie.MaxAge = sessionLength
 		http.SetCookie(res, cookie)
-		dbSessions[cookie.Value] = username
+		dbSessions[cookie.Value] = session{username, time.Now()}
 
 		// store user in dbUsers
 		bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
