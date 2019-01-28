@@ -9,8 +9,8 @@ func main() {
 	n := average(22, 46, 72, 83, 56, 29, 96)
 	fmt.Println(n)
 
-	data := []float64{25, 57, 34, 29, 79, 83} //a slice
-	m := sliceAverage(data...)                // opens slice and passes elements to function as individual args
+	data := []float64{25, 57, 34, 29, 79, 83} // composite literal, a slice of floats
+	m := sliceAverage(data...)                // Unfurling the Slice: opens slice and passes elements to function as individual args
 	fmt.Println(m)
 }
 
@@ -41,7 +41,7 @@ func average(sf ...float64) float64 {
 
 func sliceAverage(sf ...float64) float64 { // could also change to accept a []float64
 	total := 0.0
-	for _, v := range sf {
+	for _, v := range sf { // _ is index, v is value at index
 		total += v
 	}
 	return total / float64(len(sf))
