@@ -5,6 +5,9 @@ import "fmt"
 const k string = "Hello World"
 const j int = 50
 
+// can also declare vars of same type on the same line
+var p, q int
+
 func Variables() {
 	fmt.Println("Variables")
 	a := 10
@@ -16,5 +19,13 @@ func Variables() {
 	fmt.Printf("%v \n", b)
 	fmt.Printf("%v \n", c)
 	fmt.Printf("%v \n", d)
-	fmt.Printf(k, j, "\n")
+	fmt.Printf("%v \n", k)
+	fmt.Printf("%v \n", j)
+
+	p = 40
+	q = 41
+
+	// multiple assignments
+	p, q = 42, 43
+	fmt.Println(p, q)
 }

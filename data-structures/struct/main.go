@@ -19,14 +19,17 @@ import (
 type Person struct {
 	First string
 	Last  string
+	// could also declare as First, Last string
 	Age   int `json:"Years"` // tag
 }
 
 type Singer struct {
-	Person
-	Genre string
+	Person // anonymous or embedded field
+	Genre string // identifier, type
 }
 
+// Method Set
+// set of methods attached to type
 func (p Person) fullName() string {
 	return p.First + " " + p.Last
 }
@@ -48,6 +51,8 @@ func main() {
 	fmt.Println(p1)
 	fmt.Println(p1.fullName())
 	// access fields with dot notation
+	// values of inner type Person get "promoted" to outer type Singer
+	// so First and Genre are both accessible from p1
 	fmt.Println(p1.First, p1.Genre)
 
 	// Marshalling - converts struct into json key values
