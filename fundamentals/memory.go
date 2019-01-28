@@ -4,7 +4,7 @@ import "fmt"
 
 const metersToYards float64 = 1.09361
 
-func convertMetersToYards(z *float64) { // takes pointer to float as arg
+func convertMetersToYards(z *float64) { // takes pointer to float as parameter
 	*z = *z * metersToYards // value at pointer z times meters to yards conversion
 }
 
