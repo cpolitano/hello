@@ -21,6 +21,7 @@ type Person struct {
 	Last  string
 	// could also declare as First, Last string
 	Age   int `json:"Years"` // tag
+	// json:TagName specified a different name for fields in marshaled json
 }
 
 type Singer struct {
