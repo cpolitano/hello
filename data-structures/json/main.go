@@ -56,6 +56,7 @@ func main() {
 	// JSON UNMARSHAL
 	// insert raw json string literal into a slice of byte
 	// json array of objects - convert to string, which is a slice of bytes
+	// jsonBlob is type []uint8, where uint8 is the set of all 8-bit integers aka a byte
 	var jsonBlob = []byte(`[{"Name": "Platypus", "Order": "Monotremata"}, {"Name": "Quoll", "Order": "Dasyuromor"}]`)
 
 	// slice of animals
@@ -63,10 +64,17 @@ func main() {
 	// unmarshal byte slice and store it at address of animals
 	// Unmarshal takes slice of bytes and stores unmarshaled data in the location pointed to by &animals
 	// Unmarshal ONLY returns an error if anything
-	err = json.Unmarshal(jsonBlob, &animals)
+	// Unmarshal takes data and a POINTER
+	err = json.Unmarshal(jsonBlob, &animals) // reassign, don't redefine err
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
 
 	fmt.Printf("%+v", animals)
+
+	for i, v := range animals {
+		fmt.Println("\n----- Animal ", i)
+		fmt.Println("Name: ", v.Name)
+		fmt.Println("Order: ", v.Order)
+	}
 }
