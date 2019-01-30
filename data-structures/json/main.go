@@ -29,6 +29,7 @@ func main() {
 	}
 
 	// json.Marshal turns the struct into json
+  // Marshal takes any type and returns slice of bytes
 	b, err := json.Marshal(group)
 	// always check for errors right after one might be returned
 	// always check for errors.
@@ -46,6 +47,8 @@ func main() {
 	// slice of animals
 	var animals []Animal
 	// unmarshal byte slice and store it at address of animals
+  // Unmarshal takes slice of bytes and stores unmarshaled data in the location pointed to by &animals
+  // Unmarshal ONLY returns an error if anything
 	err = json.Unmarshal(jsonBlob, &animals)
 	if err != nil {
 		fmt.Println("err: ", err)
