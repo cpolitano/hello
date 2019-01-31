@@ -77,4 +77,6 @@ func main() {
 		fmt.Println("Name: ", v.Name)
 		fmt.Println("Order: ", v.Order)
 	}
+
+	fmt.Fprintln(os.Stdout, "Animales")
 }
