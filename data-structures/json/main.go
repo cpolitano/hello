@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"io"
 )
 
 // capitalized struct name and field names
@@ -79,4 +80,5 @@ func main() {
 	}
 
 	fmt.Fprintln(os.Stdout, "Animales")
+	io.WriteString(os.Stdout, "Aolha Friends") // takes Writer and a string
 }
