@@ -80,5 +80,5 @@ func main() {
 	}
 
 	fmt.Fprintln(os.Stdout, "Animales")
-	io.WriteString(os.Stdout, "Aolha Friends") // takes Writer and a string
+	io.WriteString(os.Stdout, "Aloha Friends") // takes Writer and a string
 }
