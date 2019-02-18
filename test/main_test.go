@@ -9,3 +9,11 @@ func TestGetAverage(t *testing.T) {
 		t.Error("Expected 1.5, got ", a)
 	}
 }
+
+func TestGetSum(t *testing.T) {
+	var s int
+	s = getSum(1,2,3,4)
+	if s != 10 {
+		t.Error("Expected 10, got ", s)
+	}
+}
