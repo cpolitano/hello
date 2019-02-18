@@ -18,6 +18,12 @@ func (a ByAge) Len() int           { return len(a) }
 func (a ByAge) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByAge) Less(i, j int) bool { return a[i].age < a[j].age }
 
+type ByVegetable []person
+
+func (v ByVegetable) Len() int           { return len(v) }
+func (v ByVegetable) Swap(i, j int)      { v[i], v[j] = v[j], v[i] }
+func (v ByVegetable) Less(i, j int) bool { return v[i].vegetable < v[j].vegetable }
+
 func main() {
 	xi := []int{5, 13, 8, 3, 75, 34, 7, 2, 52, 25, 26}
 	xs := []string{"Mango", "Papaya", "Aguacate", "Chayote", "Zapote"}
@@ -44,5 +50,8 @@ func main() {
 
 	// conversion - convert people into type ByAge
 	sort.Sort(ByAge(people))
+	fmt.Println(people)
+
+	sort.Sort(ByVegetable(people))
 	fmt.Println(people)
 }
